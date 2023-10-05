@@ -7,9 +7,9 @@
 #define DHTTYPE DHT22 
 DHT dht(DHTPIN, DHTTYPE);
 
-#define SSID        "SetzeroDev-2.4G"
-#define PASSWORD    "51552105315"
-#define LINE_TOKEN  "55kssrCNJodKVwbS2WMoFGsgn0EtJn69A8Qqx0u9RES  "
+#define SSID        "Topsan iPhone"
+#define PASSWORD    "00000000"
+#define LINE_TOKEN  "b9ce0D8Wnr8AniIMi7WsHrz7zEqP0WrHBQgM5aFJNYG  "
 
 void setup() {
   Serial.println(F("DHTxx test!"));
@@ -30,7 +30,7 @@ void setup() {
 
 
   // ตัวอย่างส่งข้อความ
-  LINE.notify("อุณหภูมิ เกินกำหนด");
+  // LINE.notify("อุณหภูมิ เกินกำหนด");
 
   // ตัวอย่างส่งข้อมูล ตัวเลข
 //   LINE.notify(2342);          // จำนวนเต็ม
@@ -46,7 +46,7 @@ void setup() {
 }
 
 void loop() {
-  delay(2000);
+  delay(30000);
   float h = dht.readHumidity();
   float t = dht.readTemperature();
   float f = dht.readTemperature(true);

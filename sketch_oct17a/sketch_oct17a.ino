@@ -28,10 +28,11 @@
 
 #define DHTPIN 17
 #define DHTTYPE DHT22
-// Your WiFi credentials.
-// Set password to "" for open networks.
-char ssid[] = "SetzeroDev-2.4G";
-char pass[] = "51552105315";
+
+
+char ssid[] = "Topsan iPhone";
+char pass[] = "00000000";
+
 unsigned long myChannelNumber = 2308003;
 const char* myWriteAPIKey = "WBRTPQJSYRCKZSNU";                                              //API KEY
 String GAS_ID = "AKfycbzN2Jeif_lDAY2ujRzDxnE5_cC6lCNHQW-QGvhoSJEvfNobK7n0Wt0OOXXPuN9hKGLw";  //--> spreadsheet script ID
@@ -47,7 +48,8 @@ WiFiClientSecure client_send;
 
 
 const int LED_1 = 25;
-const int LED_2 = 27;
+const int LED_2 = 26;
+const int LED_3 = 27;
 
 
 
@@ -84,21 +86,7 @@ void myTimerEvent() {
     return;
   }
 
-  Blynk.virtualWrite(V0, t);
-  Blynk.virtualWrite(V1, h);
-
-  ThingSpeak.setField(1, t);
-  ThingSpeak.setField(2, h);
-
-  int x = ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
-  if (x == 200) {
-    Serial.println("Channel update successful.");
-  } else {
-    Serial.println("Problem updating channel. HTTP error code " + String(x));
-  }
-
-  client_send.setInsecure();
-  // sendData(t, h);
+ 
 
   if(t<25){
   digitalWrite(LED_2,1);
@@ -107,8 +95,13 @@ void myTimerEvent() {
   digitalWrite(LED_2,0);
 
   }
+
+  checkTemp(t);
+  sendBlynk(t,h);
+  sendThinkSpeak(t,h);
   sendSheet(t, h);
-  LINE.notify("อุณหภูมิห้อง" + String(t) + "°C ");
+  sendLine(t,h);
+  // LINE.notify("อุณหภูมิห้อง" + String(t) + "°C ");
   Serial.println(t);
 }
 
@@ -135,6 +128,7 @@ void setup() {
   LINE.setToken(LINE_TOKEN);
   pinMode(LED_1, OUTPUT);
   pinMode(LED_2, OUTPUT);
+  pinMode(LED_3, OUTPUT);
 }
 
 void loop() {
@@ -164,6 +158,7 @@ void sendSheet(float t, float h) {
 }
 
 void sendData(float value, float value2) {
+  client_send.setInsecure();
   Serial.println("==========");
   Serial.print("connecting to ");
   Serial.println(host);
@@ -204,4 +199,37 @@ void sendData(float value, float value2) {
   Serial.println("==========");
   Serial.println();
   //----------------------------------------
+}
+
+void sendThinkSpeak(float t, float h){
+  ThingSpeak.setField(1, t);
+  ThingSpeak.setField(2, h);
+
+  int x = ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
+  if (x == 200) {
+    Serial.println("Channel update successful.");
+  } else {
+    Serial.println("Problem updating channel. HTTP error code " + String(x));
+  }
+}
+
+void sendBlynk(float t, float h){
+  Blynk.virtualWrite(V0, t);
+  Blynk.virtualWrite(V1, h);
+}
+
+void sendLine(float t, float h){
+  LINE.notify("อุณหภูมิห้อง" + String(t) + "°C ");
+  LINE.notify("ความชื้น" + String(h) + "% ");
+
+}
+void checkTemp(float t){
+    if(t < 25){
+      digitalWrite(LED_2,1);
+      digitalWrite(LED_3,0);
+
+    }else{
+      digitalWrite(LED_2,0);
+      digitalWrite(LED_3,1);
+    }
 }

@@ -179,7 +179,7 @@ void sendLine(float t, float h){
 
 }
 void checkTemp(float t, int check){
-    if(t < check){
+    if(t > check){
       digitalWrite(LED_1,1);
     }else{
       digitalWrite(LED_1,0);

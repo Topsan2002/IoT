@@ -85,7 +85,7 @@ void loop() {
   }
 
   // เช็คอุณหภูมิแสดงไฟ
-  checkTemp(t);
+  checkTemp(t,28);
   // ส่งค่าไป thinkspeak
   sendThinkSpeak(t,h);
   // ส่งไป google sheet
@@ -178,7 +178,7 @@ void sendLine(float t, float h){
   LINE.notify("ความชื้น" + String(h) + "% ");
 
 }
-void checkTemp(float t, int check=28){
+void checkTemp(float t, int check){
     if(t < check){
       digitalWrite(LED_1,1);
     }else{
